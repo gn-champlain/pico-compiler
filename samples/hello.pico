@@ -1,0 +1,4 @@
+print 100;
+print 42;
+// this is a comment
+print 7;
