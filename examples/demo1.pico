@@ -1,0 +1,13 @@
+let x = 5;
+let y = 3;
+
+if (x > y) {
+    print x;
+} else {
+    print y;
+}
+
+while (x > 0) {
+    print x;
+    x = x - 1;
+}
