@@ -1,0 +1,3 @@
+C:/Users/nanda/source/repos/pico_pp_frontend/out/build/x64-Debug/CMakeFiles/pico_pp_frontend.dir
+C:/Users/nanda/source/repos/pico_pp_frontend/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/nanda/source/repos/pico_pp_frontend/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
