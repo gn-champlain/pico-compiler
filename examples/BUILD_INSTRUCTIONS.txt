@@ -1,0 +1,16 @@
+Build and run instructions (same spirit as last week):
+
+1. Assemble the LLVM IR to bitcode:
+   llvm-as inheritance.ll -o inheritance.bc
+
+2. Compile and link with clang-cl on Windows:
+   clang-cl wrapper_main.c inheritance.bc /Fe:inheritance.exe /link
+
+3. Run the program:
+   inheritance.exe
+
+Expected output:
+
+[DEBUG] Dog object created... inherited from Animal and fully ready.
+[DEBUG] Calling speak() using virtual dispatch... checking actual object type.
+[DEBUG] Dog speaks... this is the overridden version.

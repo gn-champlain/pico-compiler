@@ -1,18 +1,14 @@
-# Pico++ Frontend (Week 2)
+# Pico Compiler (Weeks 1–3)
 
-This is a small teaching compiler frontend that extends the Week 1 Pico compiler.
+## Week 1 – Frontend
+Simple Pico language frontend with Lexer, Parser, and Semantic Analyzer.
 
-Stages:
-1. Lexical analysis (Lexer)
-2. Parsing into an AST (Parser + AST)
-3. Semantic analysis with simple scope handling (SemanticAnalyzer + SymbolTable)
+## Week 2 – IR Backend
+Generates basic LLVM IR for Pico programs.
 
-You can build with CMake and run:
-
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
-./pico_pp_frontend ../examples/demo1.pico
-```
+## Week 3 – Class Inheritance and Virtual Functions
+- Added Pico-style example of class inheritance: Animal and Dog
+- Demonstrated nested structs for inheritance
+- Added vtable for virtual function dispatch
+- Simple exception handling using invoke + landingpad
+- IR file is located in examples/inheritance.ll
