@@ -1,0 +1,5 @@
+# ninja log v6
+44	598	7843296660078977	CMakeFiles/pico.dir/src/lexer.cpp.obj	918bb268324ccb34
+63	886	7843296660278128	CMakeFiles/pico.dir/src/parser.cpp.obj	18e441cabf4da5e
+80	2559	7843296660436979	CMakeFiles/pico.dir/src/codegen.cpp.obj	fbac8f3fb49bc89f
+19	2110	7843298720843630	CMakeFiles/pico.dir/src/main.cpp.obj	bbf904acbf1bdd41

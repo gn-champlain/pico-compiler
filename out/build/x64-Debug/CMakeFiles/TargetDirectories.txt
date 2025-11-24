@@ -1,0 +1,7 @@
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/intrinsics_gen.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/omp_gen.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/acc_gen.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/RISCVTargetParserTableGen.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/pico.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/nanda/source/repos/pico-compiler/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
