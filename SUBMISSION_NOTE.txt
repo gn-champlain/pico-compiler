@@ -1,0 +1,10 @@
+Hello Sir,
+
+I am submitting my Week 4 assignment on TableGen for backend development. I continued from my previous work and created a small fictional target called PicoISA. I defined the registers, formats, and a few simple instructions in TableGen, generated the `.inc` files with llvm-tblgen, and integrated them into C++ classes. I also added the target info, MC layer, and target machine init so the backend builds cleanly as a library.
+
+I tested by running the CMake build and checking that the generated files appear in `build/include/PicoISA/Gen`. I also kept a tiny IR file for a quick smoke test. Everything is simple and beginner friendly since I want to explain each part in class.
+
+Please let me know if you want extra screenshots or one more test case. Thank you for your guidance.
+
+Best regards,
+Gulshan
