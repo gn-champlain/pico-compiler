@@ -1,0 +1,25 @@
+# Build/IDE junk
+.vs/
+build/
+CMakeFiles/
+CMakeCache.txt
+*.vcxproj.user
+*.opendb
+*.log
+*.tlog
+*.ilk
+*.pdb
+*.obj
+*.pch
+*.ipch
+
+# Binaries
+*.exe
+*.lib
+*.dll
+*.exp
+
+# Misc
+*.suo
+*.user
+*.DS_Store
