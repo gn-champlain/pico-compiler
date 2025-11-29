@@ -18,11 +18,21 @@ add_executable(pico
     src/lexer.cpp
     src/parser.cpp
     src/codegen.cpp
+    src/jit.cpp        # <--- NEW
 )
 
 target_include_directories(pico PRIVATE include)
 
 # Map LLVM components to libraries
-llvm_map_components_to_libnames(REQ_LLVM_LIBS Core Support)
+llvm_map_components_to_libnames(REQ_LLVM_LIBS
+    Core
+    Support
+    OrcJIT
+    ExecutionEngine
+    MC
+    MCJIT
+    native
+    nativecodegen
+)
 
 target_link_libraries(pico PRIVATE ${REQ_LLVM_LIBS})

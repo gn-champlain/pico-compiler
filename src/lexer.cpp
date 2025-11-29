@@ -51,6 +51,32 @@ Token Lexer::next() {
     std::size_t tokLine = line;
     std::size_t tokCol = col;
     char c = peek();
+    // single-character operators and punctuation
+    if (c == '+') {
+        get();
+        return Token{ TokKind::PLUS, 0, tokLine, tokCol };
+    }
+    if (c == '-') {
+        get();
+        return Token{ TokKind::MINUS, 0, tokLine, tokCol };
+    }
+    if (c == '*') {
+        get();
+        return Token{ TokKind::STAR, 0, tokLine, tokCol };
+    }
+    if (c == '/') {
+        get();
+        return Token{ TokKind::SLASH, 0, tokLine, tokCol };
+    }
+    if (c == '(') {
+        get();
+        return Token{ TokKind::LPAREN, 0, tokLine, tokCol };
+    }
+    if (c == ')') {
+        get();
+        return Token{ TokKind::RPAREN, 0, tokLine, tokCol };
+    }
+
 
     if (c == '\0') {
         return Token{TokKind::END, 0, tokLine, tokCol};

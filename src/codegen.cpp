@@ -14,51 +14,84 @@ struct CodeGen::Impl {
     std::unique_ptr<IRBuilder<>> builder;
     Function* printfFn = nullptr;
 
-    explicit Impl(std::string name) {
-        mod = std::make_unique<Module>(name, ctx);
-        builder = std::make_unique<IRBuilder<>>(ctx);
-    }
+    // helper to emit IR for an expression tree
+    Value* emitExpr(const Expr* e) {
+        if (!e) return nullptr;
 
-    void declarePrintf() {
-        auto* i8PtrTy = Type::getInt8PtrTy(ctx);
-        auto* printfTy = FunctionType::get(Type::getInt32Ty(ctx), { i8PtrTy }, true);
-        printfFn = cast<Function>(mod->getOrInsertFunction("printf", printfTy).getCallee());
-    }
+        // number literal
+        if (auto num = dynamic_cast<const NumberExpr*>(e)) {
+            return ConstantInt::get(Type::getInt32Ty(ctx), num->value, true);
+        }
 
-    Value* makeFormatString() {
-        // Creates a global string "%d\n" and returns i8* pointer to it.
-        return builder->CreateGlobalStringPtr("%d\n", "fmt");
+        // binary expression: lhs (op) rhs
+        if (auto bin = dynamic_cast<const BinaryExpr*>(e)) {
+            Value* lhsV = emitExpr(bin->lhs.get());
+            Value* rhsV = emitExpr(bin->rhs.get());
+            if (!lhsV || !rhsV) return nullptr;
+
+            switch (bin->op) {
+            case '+':
+                return builder->CreateAdd(lhsV, rhsV, "addtmp");
+            case '-':
+                return builder->CreateSub(lhsV, rhsV, "subtmp");
+            case '*':
+                return builder->CreateMul(lhsV, rhsV, "multmp");
+            case '/':
+                // signed integer division
+                return builder->CreateSDiv(lhsV, rhsV, "divtmp");
+            default:
+                return nullptr;
+            }
+        }
+
+        // unknown expression type
+        return nullptr;
     }
 };
 
 CodeGen::CodeGen(std::string moduleName)
-    : impl(std::make_unique<Impl>(std::move(moduleName))) {}
+    : impl(std::make_unique<Impl>()) {
+    impl->mod = std::make_unique<Module>(moduleName, impl->ctx);
+    impl->builder = std::make_unique<IRBuilder<>>(impl->ctx);
+}
 
 CodeGen::~CodeGen() = default;
 
+// Build LLVM IR for the program and return the Module
 std::unique_ptr<Module> CodeGen::emit(const Program& P) {
-    impl->declarePrintf();
+    // Declare printf: int printf(const char *fmt, ...);
+    auto* i8PtrTy = Type::getInt8PtrTy(impl->ctx);
+    auto* printfTy = FunctionType::get(
+        Type::getInt32Ty(impl->ctx),
+        { i8PtrTy },
+        true);
+    impl->printfFn = cast<Function>(
+        impl->mod->getOrInsertFunction("printf", printfTy).getCallee());
 
     // int main()
-    FunctionType* mainTy =
-        FunctionType::get(Type::getInt32Ty(impl->ctx), false);
-    Function* mainFn =
-        Function::Create(mainTy,
-                         Function::ExternalLinkage,
-                         "main",
-                         impl->mod.get());
+    auto* mainTy = FunctionType::get(
+        Type::getInt32Ty(impl->ctx),
+        false);
+    Function* mainFn = Function::Create(
+        mainTy,
+        Function::ExternalLinkage,
+        "main",
+        impl->mod.get());
 
-    BasicBlock* entry =
-        BasicBlock::Create(impl->ctx, "entry", mainFn);
+    BasicBlock* entry = BasicBlock::Create(impl->ctx, "entry", mainFn);
     impl->builder->SetInsertPoint(entry);
 
-    Value* fmt = impl->makeFormatString();
+    // Create a global format string "%d\n"
+    Value* fmt = impl->builder->CreateGlobalStringPtr("%d\n", "fmt");
 
-    // For each print statement, emit a call to printf("%d\n", value)
+    // For each print statement, emit a call to printf("%d\n", <expr>)
     for (const auto& s : P.stmts) {
-        Value* num =
-            ConstantInt::get(Type::getInt32Ty(impl->ctx), s.value, true);
-        impl->builder->CreateCall(impl->printfFn, { fmt, num });
+        Value* val = impl->emitExpr(s.expr.get());
+        if (!val) {
+            errs() << "CodeGen error: null expression value\n";
+            continue;
+        }
+        impl->builder->CreateCall(impl->printfFn, { fmt, val });
     }
 
     // return 0;

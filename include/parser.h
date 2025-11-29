@@ -1,24 +1,36 @@
 #ifndef PICO_PARSER_H
 #define PICO_PARSER_H
 
+#include <memory>
 #include "lexer.h"
 #include "ast.h"
 
-// The Parser consumes tokens from the Lexer and builds a Program AST.
-// Grammar:
-//   program := { "print" NUMBER ";" } EOF
+// Very small recursive-descent parser for:
+//
+//   program := { "print" expr ";" } EOF
+//   expr    := term { ("+" | "-") term }
+//   term    := factor { ("*" | "/") factor }
+//   factor  := NUMBER | "(" expr ")"
+//
 class Parser {
 public:
-    explicit Parser(Lexer& L);
+    explicit Parser(Lexer& lex);
 
-    bool parseProgram(Program& P);
+    // Parse the whole program into 'prog'.
+    // Returns true on success, false on error.
+    bool parseProgram(Program& prog);
 
 private:
     Lexer& lex;
-    Token cur;
+    Token curTok;
 
     void advance();
-    bool expect(TokKind k, const char* msg);
+    bool expect(TokKind kind);
+
+    // expression helpers
+    std::unique_ptr<Expr> parseExpr();
+    std::unique_ptr<Expr> parseTerm();
+    std::unique_ptr<Expr> parseFactor();
 };
 
 #endif // PICO_PARSER_H

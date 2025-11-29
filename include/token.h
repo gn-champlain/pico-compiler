@@ -6,10 +6,17 @@
 enum class TokKind {
     PRINT,
     NUMBER,
-    SEMI,
+    PLUS,    // +
+    MINUS,   // -
+    STAR,    // *
+    SLASH,   // /
+    LPAREN,  // (
+    RPAREN,  // )
+    SEMI,    // ;
     END,
     INVALID
 };
+
 
 struct Token {
     TokKind kind;
