@@ -8,6 +8,8 @@
 #include "parser.h"
 #include "codegen.h"
 #include "jit.h"
+#include "M88kTargetInfo.h"      // Week 6 - small helper for M88k info
+#include "M88kInstrFormats.h"    // Week 6 - instruction format helpers
 
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
@@ -70,6 +72,35 @@ static llvm::Value* emitExprJIT(const Expr* e,
     return nullptr;
 }
 
+// Week 6 - small helper to show my M88k instruction formats.
+// I will use this for console output and screenshots.
+static void printM88kSampleInstructions() {
+    using namespace pico;
+
+    M88kRType rAdd;
+    rAdd.op = M88kOpcode::ADD;
+    rAdd.rd = 1;
+    rAdd.rs = 2;
+    rAdd.rt = 3;
+
+    M88kMType mLd;
+    mLd.op = M88kOpcode::LD;
+    mLd.rd = 3;
+    mLd.rs = 15;   // sp
+    mLd.offset = 8;
+
+    M88kBType bEq;
+    bEq.op = M88kOpcode::BEQ;
+    bEq.rs = 1;
+    bEq.rt = 3;
+    bEq.label = "L1";
+
+    std::cout << "\nSample M88k instructions (Week 6):\n";
+    std::cout << "  " << toString(rAdd) << "\n";
+    std::cout << "  " << toString(mLd) << "\n";
+    std::cout << "  " << toString(bEq) << "\n";
+}
+
 int main(int argc, char* argv[]) {
     bool useJIT = false;
     std::string inputPath;
@@ -121,6 +152,14 @@ int main(int argc, char* argv[]) {
         }
         mod->print(os, nullptr);
         std::cout << "Wrote IR to " << outputPath << "\n";
+
+        // Week 6: print M88k design summary for screenshots
+        std::cout << "\n=== Week 6: M88k backend info ===\n";
+        pico::printM88kSummary();
+
+        // Week 6: also show a few sample M88k instructions
+        printM88kSampleInstructions();
+
         return 0;
     }
 
@@ -181,5 +220,13 @@ int main(int argc, char* argv[]) {
 
     int exitCode = runJIT(std::move(TSM));
     std::cout << "JIT exit code: " << exitCode << "\n";
+
+    // Week 6: print M88k design summary for screenshots (JIT path)
+    std::cout << "\n=== Week 6: M88k backend info ===\n";
+    pico::printM88kSummary();
+
+    // Week 6: also show the sample M88k instructions in JIT mode
+    printM88kSampleInstructions();
+
     return exitCode;
 }

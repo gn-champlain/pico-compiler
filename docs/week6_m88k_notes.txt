@@ -1,0 +1,58 @@
+﻿Week 6 – M88k Backend Design (my notes)
+
+Goal:
+Make a simple imaginary M88k CPU that is enough for Pico++ code.
+Later this will connect to LLVM as a backend.
+
+Word size:
+- 32-bit, two’s complement ints
+- Little endian
+
+Registers:
+- 16 general purpose registers: r0..r15
+- r0 is always 0 (reads as 0, writes are ignored)
+- r1: function return value (also first argument)
+- r2–r4: extra argument registers
+- r14: frame pointer (fp)
+- r15: stack pointer (sp)
+- All others are general use for now.
+
+Instruction formats:
+- R-type:  op rd, rs, rt      (3 registers)
+  Example: add r1, r2, r3     ; r1 = r2 + r3
+
+- I-type:  op rd, rs, imm16   (reg + 16-bit immediate)
+  Example: addi r1, r2, 4     ; r1 = r2 + 4
+
+- M-type (memory): op rd, offset(rs)
+  Example: ld r1, 8(r15)      ; r1 = *(sp + 8)
+           st r2, -4(r14)     ; *(fp - 4) = r2
+
+- B-type (branches): op rs, rt, label
+  Example: beq r1, r2, L1     ; if (r1 == r2) jump L1
+
+- J-type (jumps): j label, jal label, ret
+  Example: jal func           ; call function, save return address
+           ret                ; return to caller
+
+Basic instruction set:
+- Arithmetic: add, sub, mul (optional), and, or, xor
+- Compare/branch: cmp, beq, bne, blt, bge
+- Load/store: ld, st
+- Stack/frame: addi sp, sp, imm / addi fp, sp, imm
+- Calls/returns: jal, ret
+
+Simple calling convention (for Pico++):
+- Arguments:
+  - arg1 → r1
+  - arg2 → r2
+  - arg3 → r3
+  - arg4 → r4
+  - extra args go on stack
+- Return value: r1
+- Stack:
+  - r15 is sp, grows down (sp = sp - size on push)
+- Frame pointer:
+  - r14 is fp, points to fixed place in current frame
+- Callee saves: r5–r9, r14, r15 (must restore before return)
+- Caller saves: r1–r4, r10–r13 if needed
