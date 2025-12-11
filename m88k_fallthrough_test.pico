@@ -1,0 +1,8 @@
+// m88k_fallthrough_test.pico
+// Simple straight-line program for testing IR + M88k backend wiring.
+
+print 100;
+print 1 + 2 * 3;
+print (10 - 4) / 2;
+print 7 * (3 + 2);
+print 200;

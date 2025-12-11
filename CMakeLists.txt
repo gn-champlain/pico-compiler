@@ -21,6 +21,7 @@ add_executable(pico
     src/jit.cpp        # <--- Week 5
     src/M88kTargetInfo.cpp   # <--- Week 6 M88k helper
     src/M88kInstrFormats.cpp # <--- Week 6 M88k instruction formats
+    src/M88kFallthroughPass.cpp   # <-- Week 7
 )
 
 target_include_directories(pico PRIVATE include)
